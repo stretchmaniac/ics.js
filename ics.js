@@ -17,7 +17,25 @@ var ics = function(uidDomain, prodId) {
   var calendarStart = [
     'BEGIN:VCALENDAR',
     'PRODID:' + prodId,
-    'VERSION:2.0'
+    'VERSION:2.0',
+    'BEGIN:VTIMEZONE', // central time zone
+    'TZID:America/Chicago',
+    'X-LIC-LOCATION:America/Chicago',
+    'BEGIN:DAYLIGHT',
+    'TZOFFSETFROM:-0600',
+    'TZOFFSETTO:-0500',
+    'TZNAME:CDT',
+    'DTSTART:19700308T020000',
+    'RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU',
+    'END:DAYLIGHT',
+    'BEGIN:STANDARD',
+    'TZOFFSETFROM:-0500',
+    'TZOFFSETTO:-0600',
+    'TZNAME:CST',
+    'DTSTART:19701101T020000',
+    'RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU',
+    'END:STANDARD',
+    'END:VTIMEZONE'
   ].join(SEPARATOR);
   var calendarEnd = SEPARATOR + 'END:VCALENDAR';
   var BYDAY_VALUES = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
@@ -135,7 +153,7 @@ var ics = function(uidDomain, prodId) {
       // Since some calendars don't add 0 second events, we need to remove time if there is none...
       var start_time = '';
       var end_time = '';
-      if (start_hours + start_minutes + start_seconds + end_hours + end_minutes + end_seconds != 0) {
+      if (start_hours + start_minutes + start_seconds + end_hours + end_minutes + end_seconds !== 0) {
         start_time = 'T' + start_hours + start_minutes + start_seconds;
         end_time = 'T' + end_hours + end_minutes + end_seconds;
       }
@@ -179,9 +197,9 @@ var ics = function(uidDomain, prodId) {
         'UID:' + calendarEvents.length + "@" + uidDomain,
         'CLASS:PUBLIC',
         'DESCRIPTION:' + description,
-        'DTSTAMP;VALUE=DATE-TIME:' + now,
-        'DTSTART;VALUE=DATE-TIME:' + start,
-        'DTEND;VALUE=DATE-TIME:' + end,
+        'DTSTAMP;TZID=America/Chicago:' + now,
+        'DTSTART;TZID=America/Chicago:' + start,
+        'DTEND;TZID=America/Chicago:' + end,
         'LOCATION:' + location,
         'SUMMARY;LANGUAGE=en-us:' + subject,
         'TRANSP:TRANSPARENT',
